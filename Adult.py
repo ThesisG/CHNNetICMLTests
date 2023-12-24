@@ -2,8 +2,8 @@
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
-from tensorflow.keras.optimizers import Adam
-from tensorflow.random import set_seed
+from tensorflow.keras.optimizers import SGD
+from tensorflow import random as rd
 
 # Import other libraries
 import numpy as np
@@ -25,10 +25,10 @@ X = minmax_scale(X, axis = 0)
 X, y = X.astype("float32"), y.astype("float32")
 
 # split into train and test
-trainX, x_test, trainY, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+trainX, x_test, trainY, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # split into train and validation
-x_train, x_val, y_train, y_val = train_test_split(trainX, trainY, test_size=0.2, random_state=1)
+x_train, x_val, y_train, y_val = train_test_split(trainX, trainY, test_size=0.2, random_state=42)
 
 
 
@@ -55,59 +55,52 @@ layers = 3
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.00001
-optimizer = Adam(learning_rate=learning_rate)
+learning_rate = 0.001
+optimizer = SGD(learning_rate=learning_rate, momentum = 0.9)
 
-loss = SparseCategoricalCrossentropy(from_logits=True)
-
-
-
-# clear file
-# open('file.txt', 'w').close()
+loss = SparseCategoricalCrossentropy()
 
 
+
+# train and test arcihtectures
 for arch in range(archs):
-    #Create FNN model
-    FNN_model = Sequential()
-
-    for _ in range(layers):
-        FNN_model.add(Dense(FNN_Hn, activation='relu'))
-
-    FNN_model.add(Dense(2 ,activation="softmax"))
-
-    FNN_model.compile(optimizer=optimizer,
-                loss=loss,
-                metrics=['accuracy'])
-
-    FNN_model.build(x_train.shape)
-
-    FNN_parameters = np.sum([np.prod(var.get_shape()) for var in FNN_model.trainable_weights])
-
-
-
-    #Create CHN model
-    CHN_model = Sequential()
-
-    for _ in range(layers):
-        CHN_model.add(CHNLayer(CHN_Hn, activation='relu'),)
-
-    CHN_model.add(Dense(2 ,activation="softmax"))
-
-    CHN_model.compile(optimizer=optimizer,
-                loss=loss,
-                metrics=['accuracy'])
-
-    CHN_model.build(x_train.shape)
-
-    CHN_parameters = np.sum([np.prod(var.get_shape()) for var in CHN_model.trainable_weights])
-
-
-
     # train and test models
     for seed in range(num_seeds):
         np.random.seed(seed)
-        set_seed(seed)
+        rd.set_seed(seed)
 
+        #Create FNN model
+        FNN_model = Sequential()
+
+        for _ in range(layers):
+            FNN_model.add(Dense(FNN_Hn, activation='relu'))
+
+        FNN_model.add(Dense(2 ,activation="softmax"))
+
+        FNN_model.compile(optimizer=optimizer,
+                    loss=loss,
+                    metrics=['accuracy'])
+
+        FNN_model.build(x_train.shape)
+
+        FNN_parameters = np.sum([np.prod(var.get_shape()) for var in FNN_model.trainable_weights])
+
+        #Create CHN model
+        CHN_model = Sequential()
+
+        for _ in range(layers):
+            CHN_model.add(CHNLayer(CHN_Hn, activation='relu'),)
+
+        CHN_model.add(Dense(2 ,activation="softmax"))
+
+        CHN_model.compile(optimizer=optimizer,
+                    loss=loss,
+                    metrics=['accuracy'])
+
+        CHN_model.build(x_train.shape)
+
+        CHN_parameters = np.sum([np.prod(var.get_shape()) for var in CHN_model.trainable_weights])
+        
         # train FNN
         FNN_History = FNN_model.fit(x_train, y_train, epochs = epochs, batch_size = batchSize, validation_data=(x_val, y_val))
 
@@ -157,7 +150,7 @@ for arch in range(archs):
         metFile.write(f"std: {FNN_accuracy_std}\n")
         metFile.write("LOSS\n")
         metFile.write(f"Mean: {FNN_loss_mean}\n")
-        metFile.write(f"std: {FNN_loss_std}\n")
+        metFile.write(f"std: {FNN_loss_std}\n\n")
 
         # CHN results
         metFile.write("CHN MODEL\n")
@@ -167,7 +160,7 @@ for arch in range(archs):
         metFile.write(f"std: {CHN_accuracy_std}\n")
         metFile.write("LOSS\n")
         metFile.write(f"Mean: {CHN_loss_mean}\n")
-        metFile.write(f"std: {CHN_loss_std}\n")
+        metFile.write(f"std: {CHN_loss_std}")
 
 
 
