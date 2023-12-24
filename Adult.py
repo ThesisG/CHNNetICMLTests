@@ -10,6 +10,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from pmlb import fetch_data
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import minmax_scale
 
 # import CHN Layer
 from CHNLayer import CHNLayer
@@ -18,6 +19,7 @@ from CHNLayer import CHNLayer
 
 # fetch dataset
 X, y = fetch_data('adult', return_X_y=True, local_cache_dir='./Datasets')
+X = minmax_scale(X, axis = 0)
 
 # convert to "float32"
 X, y = X.astype("float32"), y.astype("float32")
@@ -47,13 +49,13 @@ CHN_test_loss = []
 num_seeds = 3
 archs = 3
 epochs = 10
-batchSize = 128
+batchSize = 1024
 
 layers = 3
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.001
+learning_rate = 0.00001
 optimizer = Adam(learning_rate=learning_rate)
 
 loss = SparseCategoricalCrossentropy(from_logits=True)
@@ -71,7 +73,7 @@ for arch in range(archs):
     for _ in range(layers):
         FNN_model.add(Dense(FNN_Hn, activation='relu'))
 
-    FNN_model.add(Dense(2 ,activation="sigmoid"))
+    FNN_model.add(Dense(2 ,activation="softmax"))
 
     FNN_model.compile(optimizer=optimizer,
                 loss=loss,
@@ -89,7 +91,7 @@ for arch in range(archs):
     for _ in range(layers):
         CHN_model.add(CHNLayer(CHN_Hn, activation='relu'),)
 
-    CHN_model.add(Dense(62 ,activation="softmax"))
+    CHN_model.add(Dense(2 ,activation="softmax"))
 
     CHN_model.compile(optimizer=optimizer,
                 loss=loss,
@@ -180,6 +182,6 @@ for arch in range(archs):
         plt.ylabel("Loss")
         plt.legend(["FNN"] + ["CHN"])
         plt.savefig(f"Adult/adultArch{arch}Seed{seed}.pdf")
-        plt.show()
+        plt.clf()
 
     layers += 2
