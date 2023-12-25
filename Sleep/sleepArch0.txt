@@ -1,0 +1,17 @@
+FNN MODEL
+Params: 510505
+ACCURACY
+Mean: 0.20116136968135834
+std: 0.0
+LOSS
+Mean: nan
+std: nan
+
+CHN MODEL
+Params: 1260505
+ACCURACY
+Mean: 0.20116136968135834
+std: 0.0
+LOSS
+Mean: nan
+std: nan

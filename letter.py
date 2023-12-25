@@ -18,7 +18,7 @@ from CHNLayer import CHNLayer
 
 
 # fetch dataset
-X, y = fetch_data('adult', return_X_y=True, local_cache_dir='./Datasets')
+X, y = fetch_data('letter', return_X_y=True, local_cache_dir='./Datasets')
 X = minmax_scale(X, axis = 0)
 
 # convert to "float32"
@@ -46,16 +46,16 @@ CHN_test_loss = []
 
 
 # declare hyperparameters
-num_seeds = 3
+num_seeds = 1
 archs = 3
-epochs = 30
-batchSize = 128
+epochs = 10
+batchSize = 1024
 
 layers = 3
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.00001
+learning_rate = 0.001
 optimizer = Adam(learning_rate=learning_rate)
 
 loss = SparseCategoricalCrossentropy()
@@ -75,7 +75,7 @@ for arch in range(archs):
         for _ in range(layers):
             FNN_model.add(Dense(FNN_Hn, activation='relu'))
 
-        FNN_model.add(Dense(2 ,activation="softmax"))
+        FNN_model.add(Dense(26 ,activation="softmax"))
 
         FNN_model.compile(optimizer=optimizer,
                     loss=loss,
@@ -91,7 +91,7 @@ for arch in range(archs):
         for _ in range(layers):
             CHN_model.add(CHNLayer(CHN_Hn, activation='relu'),)
 
-        CHN_model.add(Dense(2 ,activation="softmax"))
+        CHN_model.add(Dense(26 ,activation="softmax"))
 
         CHN_model.compile(optimizer=optimizer,
                     loss=loss,
@@ -141,7 +141,7 @@ for arch in range(archs):
 
 
     # store results
-    with open(f"Adult/adultArch{arch}.txt", "w") as metFile:
+    with open(f"Letter/letterArch{arch}.txt", "w") as metFile:
         # FNN results
         metFile.write("FNN MODEL\n")
         metFile.write(f"Params: {FNN_parameters}\n")
@@ -170,11 +170,11 @@ for arch in range(archs):
         plt.plot(CHN_valloss_history[seed], color="r", linewidth=2)
         plt.plot(FNN_trainloss_history[seed], color="c", linewidth=0.5)
         plt.plot(CHN_trainloss_history[seed], color="r", linewidth=0.5)
-        plt.title(f"Adult: Architecture {arch}")
+        plt.title(f"Letter: Architecture {arch}")
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
         plt.legend(["FNN"] + ["CHN"])
-        plt.savefig(f"Adult/adultArch{arch}Seed{seed}.pdf")
+        plt.savefig(f"Letter/letterArch{arch}Seed{seed}.pdf")
         plt.clf()
 
     layers += 2
