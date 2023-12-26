@@ -1,7 +1,6 @@
 # import tensorflow
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from tensorflow.keras.optimizers import Adam
 from tensorflow import random as rd
 
@@ -58,14 +57,17 @@ CHN_Hn = 500
 learning_rate = 0.00001
 optimizer = Adam(learning_rate=learning_rate)
 
-loss = SparseCategoricalCrossentropy()
+loss = "binary_crossentropy"
 
 
 
 # train and test arcihtectures
 for arch in range(archs):
+    print(f"Testing Architecure {arch + 1}")
     # train and test models
     for seed in range(num_seeds):
+        print(f"Testing for Seed {seed + 1}")
+
         np.random.seed(seed)
         rd.set_seed(seed)
 
@@ -75,7 +77,7 @@ for arch in range(archs):
         for _ in range(layers):
             FNN_model.add(Dense(FNN_Hn, activation='relu'))
 
-        FNN_model.add(Dense(2 ,activation="softmax"))
+        FNN_model.add(Dense(1, activation="sigmoid"))
 
         FNN_model.compile(optimizer=optimizer,
                     loss=loss,
@@ -91,7 +93,7 @@ for arch in range(archs):
         for _ in range(layers):
             CHN_model.add(CHNLayer(CHN_Hn, activation='relu'),)
 
-        CHN_model.add(Dense(2 ,activation="softmax"))
+        CHN_model.add(Dense(1, activation="sigmoid"))
 
         CHN_model.compile(optimizer=optimizer,
                     loss=loss,
@@ -102,6 +104,7 @@ for arch in range(archs):
         CHN_parameters = np.sum([np.prod(var.get_shape()) for var in CHN_model.trainable_weights])
         
         # train FNN
+        print("Training FNN")
         FNN_History = FNN_model.fit(x_train, y_train, epochs = epochs, batch_size = batchSize, validation_data=(x_val, y_val))
 
         # Evaluate FNN
@@ -114,6 +117,7 @@ for arch in range(archs):
         FNN_valloss_history.append(FNN_History.history['val_loss'])
 
         # train CHN
+        print("Training CHNNet")
         CHN_History = CHN_model.fit(x_train, y_train, epochs = epochs, batch_size = batchSize, validation_data=(x_val, y_val))
 
         # Evaluate CHN
