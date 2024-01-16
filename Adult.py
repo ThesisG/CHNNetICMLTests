@@ -47,10 +47,10 @@ CHN_test_loss = []
 # declare hyperparameters
 num_seeds = 3
 archs = 3
-epochs = 30
+epochs = 40
 batchSize = 128
 
-layers = 3
+layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
 

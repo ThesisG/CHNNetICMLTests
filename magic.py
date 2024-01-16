@@ -1,7 +1,7 @@
 # import tensorflow
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import SGD
 from tensorflow import random as rd
 
 # Import other libraries
@@ -47,15 +47,15 @@ CHN_test_loss = []
 # declare hyperparameters
 num_seeds = 3
 archs = 3
-epochs = 30
+epochs = 100
 batchSize = 128
 
-layers = 3
+layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.00001
-optimizer = Adam(learning_rate=learning_rate)
+learning_rate = 0.002
+optimizer = SGD(learning_rate=learning_rate, momentum=0.9)
 
 loss = "binary_crossentropy"
 

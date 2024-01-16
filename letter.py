@@ -48,14 +48,14 @@ CHN_test_loss = []
 # declare hyperparameters
 num_seeds = 3
 archs = 3
-epochs = 30
+epochs = 100
 batchSize = 128
 
-layers = 3
+layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.01
+learning_rate = 0.03
 optimizer = SGD(learning_rate=learning_rate, momentum=0.9)
 
 loss = "sparse_categorical_crossentropy"

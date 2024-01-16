@@ -1,7 +1,7 @@
 # import tensorflow
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import SGD
 from tensorflow import random as rd
 
 # Import other libraries
@@ -51,12 +51,12 @@ archs = 3
 epochs = 30
 batchSize = 128
 
-layers = 3
+layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.0001
-optimizer = Adam(learning_rate=learning_rate)
+learning_rate = 0.001
+optimizer = SGD(learning_rate=learning_rate, momentum=0.9)
 
 loss = "sparse_categorical_crossentropy"
 

@@ -50,11 +50,11 @@ archs = 3
 epochs = 30
 batchSize = 128
 
-layers = 3
+layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.00001
+learning_rate = 0.00005
 optimizer = Adam(learning_rate=learning_rate)
 
 loss = "sparse_categorical_crossentropy"
