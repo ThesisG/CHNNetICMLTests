@@ -21,11 +21,9 @@ from CHNLayer import CHNLayer
 
 # fetch dataset
 X, y = fetch_data('mnist', return_X_y=True, local_cache_dir='./Datasets')
-print(X, y)
-X = minmax_scale(X, axis = 0)
 
 # convert to "float32"
-X, y = X.astype("float32")/255, y.astype("float32")/255
+X, y = X.astype("float32")/255, y.astype("float32")
 
 # split into train and test
 trainX, x_test, trainY, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -58,7 +56,7 @@ layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
 
-learning_rate = 0.00001
+learning_rate = 0.00002
 optimizer = Adam(learning_rate=learning_rate)
 
 loss = "sparse_categorical_crossentropy"

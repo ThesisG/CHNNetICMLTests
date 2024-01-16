@@ -24,16 +24,16 @@ from CHNLayer import CHNLayer
 
 # fetch dataset
 X, y = fetch_data('mnist', return_X_y=True, local_cache_dir='./Datasets')
-X = minmax_scale(X, axis = 0)
 
 # convert to "float32"
-X, y = X.astype("float32")/255, y.astype("float32")/255
-X, y = X.astype("float32")/255, y.astype("float32")/255
+X, y = X.astype("float32")/255, y.astype("float32")
+
 def add_noise(images, noise_factor=0.7):
     noisy_images = images + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=images.shape)
     noisy_images = np.clip(noisy_images, 0., 1.)
     return noisy_images
 x_noisy = add_noise(X)
+
 # split into train and test
 trainX, x_test, trainY, y_test = train_test_split(x_noisy, y, test_size=0.2, random_state=42)
 
