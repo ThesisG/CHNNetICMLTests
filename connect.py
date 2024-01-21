@@ -53,6 +53,8 @@ batchSize = 128
 layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
+isEqual = True
+init = (3 if isEqual else 0)
 
 learning_rate = 0.00005
 optimizer = Adam(learning_rate=learning_rate)
@@ -62,8 +64,18 @@ loss = "sparse_categorical_crossentropy"
 
 
 # train and test arcihtectures
-for arch in range(archs):
+for arch in range(init, init + archs):
     print(f"Testing Architecure {arch + 1}")
+    
+    # initiate FNN_Hn for equal paremeter tests
+    if isEqual:
+        if arch == 3:
+            FNN_Hn = 850
+        elif arch == 4:
+            FNN_Hn = 780
+        else:
+            FNN_Hn = 750
+        
     # train and test models
     for seed in range(num_seeds):
         print(f"Testing for Seed {seed + 1}")
