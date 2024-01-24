@@ -4,7 +4,7 @@
 # import tensorflow
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers.legacy import Adam
 from tensorflow import random as rd
 
 # Import other libraries
@@ -50,16 +50,16 @@ CHN_test_loss = []
 # declare hyperparameters
 num_seeds = 3
 archs = 3
-epochs = 30
+epochs = 50
 batchSize = 128
 
 layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
-isEqual = True
+isEqual = False
 init = (3 if isEqual else 0)
 
-learning_rate = 0.00001
+learning_rate = 0.000001
 optimizer = Adam(learning_rate=learning_rate)
 
 loss = "mse"

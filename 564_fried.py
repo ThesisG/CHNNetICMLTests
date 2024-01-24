@@ -4,7 +4,7 @@
 # import tensorflow
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers.legacy import SGD
 from tensorflow import random as rd
 
 # Import other libraries
@@ -59,8 +59,8 @@ CHN_Hn = 500
 isEqual = True
 init = (3 if isEqual else 0)
 
-learning_rate = 0.00001
-optimizer = Adam(learning_rate=learning_rate)
+learning_rate = 0.000005
+optimizer = SGD(learning_rate=learning_rate)
 
 loss = "mse"
 
