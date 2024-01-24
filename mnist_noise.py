@@ -28,11 +28,16 @@ X, y = fetch_data('mnist', return_X_y=True, local_cache_dir='./Datasets')
 # convert to "float32"
 X, y = X.astype("float32")/255, y.astype("float32")
 
-def add_noise(images, noise_factor=0.7):
+def add_noise(images, noise_factor=0.3):
     noisy_images = images + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=images.shape)
     noisy_images = np.clip(noisy_images, 0., 1.)
     return noisy_images
+
 x_noisy = add_noise(X)
+
+# show noisy image
+# plt.imshow(x_noisy[5].reshape((28, 28)))
+# plt.show()
 
 # split into train and test
 trainX, x_test, trainY, y_test = train_test_split(x_noisy, y, test_size=0.2, random_state=42)
@@ -58,23 +63,36 @@ CHN_test_loss = []
 # declare hyperparameters
 num_seeds = 3
 archs = 3
-epochs = 30
+epochs = 50
 batchSize = 128
 
 layers = 2
 FNN_Hn = 500
 CHN_Hn = 500
+isEqual = False
+init = (3 if isEqual else 0)
 
 learning_rate = 0.00001
 optimizer = Adam(learning_rate=learning_rate)
+opt = Adam(learning_rate=0.00003)
 
 loss = "sparse_categorical_crossentropy"
 
 
 
 # train and test arcihtectures
-for arch in range(archs):
+for arch in range(init, init + archs):
     print(f"Testing Architecure {arch + 1}")
+    
+    # initiate FNN_Hn for equal paremeter tests
+    if isEqual:
+        if arch == 3:
+            FNN_Hn = 800
+        elif arch == 4:
+            FNN_Hn = 750
+        else:
+            FNN_Hn = 720
+        
     # train and test models
     for seed in range(num_seeds):
         print(f"Testing for Seed {seed + 1}")
@@ -89,7 +107,7 @@ for arch in range(archs):
             FNN_model.add(Dense(FNN_Hn, activation='relu'))
 
         FNN_model.add(Dense(10, activation="softmax"))
-        FNN_model.compile(optimizer=optimizer,
+        FNN_model.compile(optimizer=opt,
                     loss=loss,
                     metrics=['accuracy'])
 
