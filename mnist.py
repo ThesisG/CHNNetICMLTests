@@ -1,7 +1,3 @@
-# import tensorflow as tf; 
-
-# print(tf.test.is_gpu_available())
-# import tensorflow
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
@@ -12,7 +8,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from pmlb import fetch_data
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import minmax_scale
 
 # import CHN Layer
 from CHNLayer import CHNLayer
@@ -49,7 +44,7 @@ CHN_test_loss = []
 # declare hyperparameters
 num_seeds = 3
 archs = 3
-epochs = 30
+epochs = 50
 batchSize = 128
 
 layers = 2
@@ -58,7 +53,7 @@ CHN_Hn = 500
 isEqual = True
 init = (3 if isEqual else 0)
 
-learning_rate = 0.00002
+learning_rate = 0.00001
 optimizer = Adam(learning_rate=learning_rate)
 
 loss = "sparse_categorical_crossentropy"
@@ -187,7 +182,7 @@ for arch in range(init, init + archs):
         plt.plot(CHN_valloss_history[seed], color="r", linewidth=2)
         plt.plot(FNN_trainloss_history[seed], color="c", linewidth=0.5)
         plt.plot(CHN_trainloss_history[seed], color="r", linewidth=0.5)
-        plt.title(f"mnist: Architecture {arch}")
+        plt.title(f"MNIST: Architecture {arch}")
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
         plt.legend(["FNN"] + ["CHN"])

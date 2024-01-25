@@ -1,14 +1,15 @@
 # import tensorflow
 from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.datasets import fashion_mnist
 from tensorflow import random as rd
 import numpy as np
 
 # Import other libraries
 import numpy as np
 from matplotlib import pyplot as plt
-from pmlb import fetch_data
 from sklearn.model_selection import train_test_split
 
 # import CHN Layer
@@ -17,24 +18,22 @@ from CHNLayer import CHNLayer
 
 
 # fetch dataset
-X, y = fetch_data('mnist', return_X_y=True, local_cache_dir='./Datasets')
+(trainX, trainY), (x_test, y_test) = fashion_mnist.load_data()
 
 # convert to "float32"
-X, y = X.astype("float32")/255, y.astype("float32")
+trainX, trainY = trainX.astype("float32")/255, trainY.astype("float32")
+x_test, y_test = x_test.astype("float32")/255, y_test.astype("float32")
 
 def add_noise(images, noise_factor=0.3):
     noisy_images = images + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=images.shape)
     noisy_images = np.clip(noisy_images, 0., 1.)
     return noisy_images
 
-x_noisy = add_noise(X)
+trainX = add_noise(trainX)
 
 # show noisy image
 # plt.imshow(x_noisy[5].reshape((28, 28)))
 # plt.show()
-
-# split into train and test
-trainX, x_test, trainY, y_test = train_test_split(x_noisy, y, test_size=0.2, random_state=42)
 
 # split into train and validation
 x_train, x_val, y_train, y_val = train_test_split(trainX, trainY, test_size=0.2, random_state=42)
@@ -57,7 +56,7 @@ CHN_test_loss = []
 # declare hyperparameters
 num_seeds = 3
 archs = 3
-epochs = 50
+epochs = 30
 batchSize = 128
 
 layers = 2
@@ -66,7 +65,7 @@ CHN_Hn = 500
 isEqual = True
 init = (3 if isEqual else 0)
 
-learning_rate = 0.00001
+learning_rate = 0.00002
 optimizer = Adam(learning_rate=learning_rate)
 opt = Adam(learning_rate=0.00003)
 
@@ -97,6 +96,8 @@ for arch in range(init, init + archs):
         #Create FNN model
         FNN_model = Sequential()
 
+        FNN_model.add(Flatten(input_shape=(28, 28)))
+
         for _ in range(layers):
             FNN_model.add(Dense(FNN_Hn, activation='relu'))
 
@@ -111,6 +112,8 @@ for arch in range(init, init + archs):
 
         #Create CHN model
         CHN_model = Sequential()
+
+        CHN_model.add(Flatten(input_shape=(28, 28)))
 
         for _ in range(layers):
             CHN_model.add(CHNLayer(CHN_Hn, activation='relu'),)
@@ -167,7 +170,7 @@ for arch in range(init, init + archs):
 
 
     # store results
-    with open(f"mnist_noise/mnist_noiseArch{arch}.txt", "w") as metFile:
+    with open(f"fmnist_noise/fmnist_noiseArch{arch}.txt", "w") as metFile:
         # FNN results
         metFile.write("FNN MODEL\n")
         metFile.write(f"Params: {FNN_parameters}\n")
@@ -196,11 +199,11 @@ for arch in range(init, init + archs):
         plt.plot(CHN_valloss_history[seed], color="r", linewidth=2)
         plt.plot(FNN_trainloss_history[seed], color="c", linewidth=0.5)
         plt.plot(CHN_trainloss_history[seed], color="r", linewidth=0.5)
-        plt.title(f"MNIST with Noise: Architecture {arch}")
+        plt.title(f"FMNIST with Noise: Architecture {arch}")
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
         plt.legend(["FNN"] + ["CHN"])
-        plt.savefig(f"mnist_noise/mnist_noiseArch{arch}Seed{seed}.pdf")
+        plt.savefig(f"fmnist_noise/fmnist_noiseArch{arch}Seed{seed}.pdf")
         plt.clf()
 
     layers += 2
