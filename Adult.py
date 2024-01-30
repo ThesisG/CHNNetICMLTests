@@ -157,7 +157,7 @@ for arch in range(init, init + archs):
 
 
     # store results
-    with open(f"Adult/adultArch{arch}.txt", "w") as metFile:
+    with open(f"Adult/adultArch{arch+1}.txt", "w") as metFile:
         # FNN results
         metFile.write("FNN MODEL\n")
         metFile.write(f"Params: {FNN_parameters}\n")
@@ -186,11 +186,11 @@ for arch in range(init, init + archs):
         plt.plot(CHN_valloss_history[seed], color="r", linewidth=2)
         plt.plot(FNN_trainloss_history[seed], color="c", linewidth=0.5)
         plt.plot(CHN_trainloss_history[seed], color="r", linewidth=0.5)
-        plt.title(f"Adult: Architecture {arch}")
+        plt.title(f"Adult: Architecture {arch+1}")
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
         plt.legend(["FNN"] + ["CHN"])
-        plt.savefig(f"Adult/adultArch{arch}Seed{seed}.pdf")
+        plt.savefig(f"Adult/adultArch{arch+1}Seed{seed+1}.pdf")
         plt.clf()
 
     layers += 2
