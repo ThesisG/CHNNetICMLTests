@@ -67,22 +67,22 @@ The `call` method defines the forward pass of the layer and can handle different
 
 ### Test Files
 
-The py files named {dataset_name}.py holds the codes for the tests on that respective dataset. By executing the codes in these files, the test results for the respective dataset can be generated.
+The py files named `{dataset_name}.py` holds the codes for the tests on that respective dataset. By executing the codes in these files, the test results for the respective dataset can be generated.
 
 ### Parameters
 
 The following adjustable parameters allow for customization of the model's architecture, training duration, and optimization strategy based on the specific task and dataset:
 
 
-1. `num_seeds`: represents the total number of seed for each architecture
-2. `arch`: represents the total number of architecture
-3. `epochs`: represents the number of epochs for training.
+1. `num_seeds`: represents the total number of seed for each architecture.
+2. `arch`: represents the total number of architecture.
+3. `epochs`: represents the number of epochs for training each model.
 4. `batchSize`: represents the size of each batch for training.
-5. `layers`: represents the total number of layers
-6. `FNN_hn`: represents the number of hidden neurons in the n<sup>th</sup> hidden layer of the Dense layer.
-7. `CHN_hn`: represents the number of hidden neurons in the n<sup>th</sup> hidden layer of the CHNLayer.
-8. `isEqual`: `True` represents equal number of parameter
-9. `init`: represent the architecture number range in the graphs
+5. `layers`: represents the total number of layers for each training.
+6. `FNN_hn`: represents the number of hidden neurons in hidden layers of the Dense layer.
+7. `CHN_hn`: represents the number of hidden neurons in hidden layers of the CHNLayer.
+8. `isEqual`: `True` represents equal number of parameter experiments; otherwise, `False`.
+9. `init`: represent the initial architecture number for the graphs.
 10. `loss`: determines the objective function used to measure the model's performance and guide its learning during training.
 11. `optimizer`: determines the algorithm used to optimize the neural network model during training.
 
@@ -90,5 +90,5 @@ The following adjustable parameters allow for customization of the model's archi
 
 ### Results
 
-- When the training is complete, the model summary and statistical test results are displayed on the terminal.
-- The loss graphs for each seed are displayed in separate windows afterward.
+- When the training is complete, the model summary and test results are stored in the `{dataset_name}/{dataset_name}{architecture_number}.txt` file.
+- The loss graphs for each seed are stored in the `{dataset_name}/{dataset_name}{architecture_number}{seed_number}.pdf` file.
